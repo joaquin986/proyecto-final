@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Juego Adivina el Número</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .game-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .console-info {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Juego Adivina el Número</h1>
+        
+        <div class="game-info">
+            <h3>📝 Instrucciones:</h3>
+            <p>• Adivina el <strong>número secreto</strong> entre 1 y 10</p>
+            <p>• Tienes <strong>3 intentos</strong> máximo</p>
+            <p>• Recibirás pistas si el número es muy alto o muy bajo</p>
+            <p>• ¡Buena suerte! 🍀</p>
+        </div>
+        
+        <button onclick="iniciarJuego()">🚀 Iniciar Juego</button>
+        <button onclick="reiniciarJuego()">🔄 Reiniciar Juego</button>
+        
+        <div class="console-info">
+            <strong>💻 Consola del Juego:</strong><br>
+            Abre las <strong>Herramientas de Desarrollador</strong> (F12) y ve a la pestaña <strong>Console</strong> para ver todo el flujo del juego.
+        </div>
+    </div>
+
+    <script>
+        // 🎯 Variables globales del juego
+        let numeroSecreto;
+        let intentosRestantes;
+        let juegoTerminado;
+        let nombreJugador;
+
+        // 🎮 Función principal para iniciar el juego
+        function iniciarJuego() {
+            console.log("🎮 ===== JUEGO ADIVINA EL NÚMERO =====");
+            console.log("🚀 Iniciando nuevo juego...");
+            
+            // Configuración inicial del juego
+            numeroSecreto = Math.floor(Math.random() * 10) + 1;
+            intentosRestantes = 3;
+            juegoTerminado = false;
+            
+            // Solicitar nombre del jugador
+            nombreJugador = prompt("👋 ¡Hola! ¿Cuál es tu nombre?");
+            
+            // Validar que el nombre no esté vacío
+            if (!nombreJugador || nombreJugador.trim() === "") {
+                nombreJugador = "Jugador Anónimo";
+            }
+            
+            console.log(`👤 Jugador: ${nombreJugador}`);
+            console.log(`🎲 Número secreto generado (entre 1 y 10)`);
+            console.log(`🔥 Tienes ${intentosRestantes} intentos`);
+            console.log("==========================================");
+            
+            // Mostrar mensaje de bienvenida
+            alert(`¡Hola ${nombreJugador}! 🎉\n\nHe generado un número secreto entre 1 y 10.\n¡Tienes 3 intentos para adivinarlo!\n\n¡Buena suerte! 🍀`);
+            
+            // Iniciar el bucle principal del juego
+            bucleJuego();
+        }
+
+        // 🔁 Bucle principal del juego usando while
+        function bucleJuego() {
+            while (intentosRestantes > 0 && !juegoTerminado) {
+                console.log(`\n🎯 Intento ${4 - intentosRestantes} de 3`);
+                
+                // Solicitar número al usuario
+                let entrada = prompt(`${nombreJugador}, ingresa un número entre 1 y 10:\n\n💡 Intentos restantes: ${intentosRestantes}`);
+                
+                // ✅ Validar entrada del usuario
+                if (entrada === null) {
+                    // Usuario canceló
+                    console.log("❌ Juego cancelado por el usuario");
+                    alert("¡Juego cancelado! 👋");
+                    return;
+                }
+                
+                // Validar que no esté vacío
+                if (entrada.trim() === "") {
+                    console.log("⚠️ Entrada vacía detectada");
+                    alert("⚠️ Por favor, ingresa un número válido");
+                    continue;
+                }
+                
+                // Convertir a número y validar
+                let numeroIngresado = Number(entrada);
+                
+                // Validar que sea un número válido
+                if (isNaN(numeroIngresado)) {
+                    console.log(`⚠️ Entrada inválida: "${entrada}" no es un número`);
+                    alert("⚠️ Por favor, ingresa solo números");
+                    continue;
+                }
+                
+                // Validar rango (1-10)
+                if (numeroIngresado < 1 || numeroIngresado > 10) {
+                    console.log(`⚠️ Número fuera de rango: ${numeroIngresado}`);
+                    alert("⚠️ El número debe estar entre 1 y 10");
+                    continue;
+                }
+                
+                console.log(`📝 Número ingresado: ${numeroIngresado}`);
+                
+                // 🎯 Lógica principal del juego
+                if (numeroIngresado === numeroSecreto) {
+                    // ¡Victoria! 🎉
+                    juegoTerminado = true;
+                    console.log(`🎉 ¡CORRECTO! El número era ${numeroSecreto}`);
+                    console.log(`⭐ ${nombreJugador} ganó en ${4 - intentosRestantes} intento(s)`);
+                    
+                    let mensajeVictoria = `🎉 ¡FELICIDADES MANITO ${nombreJugador.toUpperCase()}! 🎉\n\n✅ Adivinaste el número ${numeroSecreto}\n🏆 Lo lograste en ${4 - intentosRestantes} intento(s)\n\n¡Eres increíble! 🌟`;
+                    alert(mensajeVictoria);
+                    
+                } else {
+                    // Número incorrecto
+                    intentosRestantes--;
+                    
+                    if (numeroIngresado > numeroSecreto) {
+                        console.log(`📉 El número ${numeroIngresado} uff TE FUISTE AL CERRO`);
+                        alert(`📉 El número ${numeroIngresado} uff TE FUISTE AL CERRO \n\n💡 Intenta con un número más pequeño\n🔥 Intentos restantes: ${intentosRestantes}`);
+                    } else {
+                        console.log(`📈 El número ${numeroIngresado} muy POR EL SUELO`);
+                        alert(`📈 El número ${numeroIngresado} muy POR EL SUELO\n\n💡 Intenta con un número más grande\n🔥 Intentos restantes: ${intentosRestantes}`);
+                    }
+                }
+            }
+            
+            // Verificar si perdió el juego
+            if (!juegoTerminado && intentosRestantes === 0) {
+                console.log(`💀 ¡GAME OVER! Se agotaron los intentos`);
+                console.log(`🎲 El número secreto era: ${numeroSecreto}`);
+                
+                let mensajeDerrota = `💀 ¡FUISTE PE  ${nombreJugador}! 💀\n\n❌ Se agotaron tus intentos\n🎲 El número secreto era: ${numeroSecreto}\n\n🔄 ¡Inténtalo de nuevo!`;
+                alert(mensajeDerrota);
+            }
+            
+            // Mensaje final en consola
+            console.log("\n🏁 ===== FIN DEL JUEGO =====");
+            console.log(`👤 Jugador: ${nombreJugador}`);
+            console.log(`🎲 Número secreto: ${numeroSecreto}`);
+            console.log(`🎯 Resultado: ${juegoTerminado ? 'BOOYAH' : 'EXTERMINADO'}`);
+            console.log("==============================\n");
+        }
+
+        // 🔄 Función para reiniciar el juego
+        function reiniciarJuego() {
+            console.log("🔄 Reiniciando juego...");
+            iniciarJuego();
+        }
+
+        // 💡 Mostrar información inicial cuando se carga la página
+        console.log("🎮 Página cargada - Juego Adivina el Número");
+        console.log("👆 Haz clic en 'Iniciar Juego' para comenzar");
+        console.log("📊 Todos los mensajes del juego aparecerán aquí");
+    </script>
+</body>
+</html>
